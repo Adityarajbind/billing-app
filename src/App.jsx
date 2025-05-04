@@ -2,12 +2,11 @@ import React, { useState } from "react";
 import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
 import { saveAs } from "file-saver";
-
 function App() {
-  const address = import.meta.env.ADDRESS;
-  const gst = import.meta.env.GST_NO;
-  const email = import.meta.env.EMAIL;
-
+  const values = import.meta.env.VITE_VALUES.split(',');
+  const address = values[0] + ","  +values[1] +","+values[2];
+  const [gst, setgst] = useState(values[4]);
+  const [email, setEmail] = useState(values[3])
   const [to, setto] = useState("");
   const [invoice_no, setinvoice_no] = useState("");
   const [date, setdate] = useState("");
@@ -67,7 +66,7 @@ function App() {
   const generateDoc = async () => {
     console.log("generating doc")
     try {
-      const response = await fetch("/invoice-template.docx");
+      const response = await fetch("/billing-app/invoice-template.docx");
       const blob = await response.blob();
       const arrayBuffer = await blob.arrayBuffer();
       const zip = new PizZip(arrayBuffer);
@@ -89,8 +88,8 @@ function App() {
         sgst,
         total,
         address:address,
-        gst:gst_no, 
-        eamil:email,
+        gst_no:gst, 
+        email:email,
         items: items.filter((item) => item.particular.trim() !== ""), // remove empty rows
       });
 
@@ -103,86 +102,78 @@ function App() {
   };
 
   return (
-    <div style={{ padding: 20 }}>
-      <h2>Invoice Generator</h2>
-      <input
+    <>
+      <h1 className="heading">Invoice Generator</h1>
+      <div className="info">
+
+      <h2>To :</h2>
+      <textarea
         placeholder="To"
         value={to}
         onChange={(e) => setto(e.target.value)}
+        style={{ width: "100%", height: "5rem" }}
       />
-      <br />
+      
+      <h2>Invoice no :</h2>
       <input
         placeholder="Invoice No"
         value={invoice_no}
         onChange={(e) => setinvoice_no(e.target.value)}
       />
-      <br />
-      <input
-        placeholder="Date"
-        value={date}
-        onChange={(e) => setdate(e.target.value)}
-      />
-      <br />
+     
+     <h2>CH no:</h2>
       <input
         placeholder="CH No"
         value={ch_no}
         onChange={(e) => setch_no(e.target.value)}
       />
-      <br />
+     
+     <h2>Our CH no:</h2>
       <input
         placeholder="Our CH No"
         value={our_ch_no}
         onChange={(e) => setour_ch_no(e.target.value)}
       />
-      <br />
+     
+     <h2>Po NO :</h2>
       <input
         placeholder="PO No"
         value={po_no}
         onChange={(e) => setpo_no(e.target.value)}
       />
-      <br />
+
+      <h2>Date:</h2>
+      <input
+        placeholder="Date"
+        value={date}
+        onChange={(e) => setdate(e.target.value)}
+      />
+       
+      <h2>CUS GSTIN No:</h2>
       <input
         placeholder="Customer GST No"
         value={cus_gst_no}
         onChange={(e) => setcus_gst_no(e.target.value)}
       />
-      <br />
-      <input
-        placeholder="Sub Total"
-        value={sub_total}
-        onChange={(e) => setsub_total(e.target.value)}
-      />
-      <br />
-      <input
-        placeholder="CGST"
-        value={cgst}
-        onChange={(e) => setcgst(e.target.value)}
-      />
-      <br />
-      <input
-        placeholder="SGST"
-        value={sgst}
-        onChange={(e) => setsgst(e.target.value)}
-      />
-      <br />
-      <input
-        placeholder="Total"
-        value={total}
-        onChange={(e) => settotal(e.target.value)}
-      />
-      <br />
-      <br />
+     
+      </div>
 
-      <h3>Items</h3>
+      <br />
+      <h3>ITEMS</h3>
       {items.map((item, index) => (
-        <div key={index} style={{ marginBottom: 10 }}>
-          <input
+        <div key={index} style={{ marginBottom: 10 }} className="item">
+          <h3 style={{alignSelf:"start"}}>Particular : </h3>
+          <textarea
             placeholder="Particular"
             value={item.particular}
             onChange={(e) =>
               handleItemChange(index, "particular", e.target.value)
             }
+            style={{ width: "100%", height: "5rem" }}
           />
+          <div className="part1">
+          <h3>HSN :</h3>
+          <h3>Qty :</h3>
           <input
             placeholder="HSN"
             value={item.hsn}
@@ -193,6 +184,10 @@ function App() {
             value={item.qty}
             onChange={(e) => handleItemChange(index, "qty", e.target.value)}
           />
+          </div>
+          <div className="part2">
+          <h3>Rate :</h3>
+          <h3>Amount :</h3>
           <input
             placeholder="Rate"
             value={item.rate}
@@ -203,21 +198,56 @@ function App() {
             value={item.amount}
             onChange={(e) => handleItemChange(index, "amount", e.target.value)}
           />
+          </div>
           <button
             onClick={() => removeItem(index)}
             disabled={items.length <= 1}
           >
-            Remove
+            <img src="trash.svg" alt="Delete entry" />
           </button>
         </div>
       ))}
-      <button onClick={addItem}>Add Item</button>
-      <br />
-      <br />
+      <button onClick={addItem} className="add_btn">Add&#43;</button>
 
-      <button onClick={generateDoc}>Generate DOCX</button>
-      <h1>ehllo</h1>
-    </div>
+      <br />
+      <br />
+      <div className="info">
+
+      <h2>SUB TOTAL : </h2>
+       <input
+         placeholder="Sub Total"
+         value={sub_total}
+         onChange={(e) => setsub_total(e.target.value)}
+       />
+      
+      <h2>CGST : </h2>
+       <input
+         placeholder="CGST"
+         value={cgst}
+         onChange={(e) => setcgst(e.target.value)}
+       />
+      
+      <h2>SGST : </h2>
+       <input
+         placeholder="SGST"
+         value={sgst}
+         onChange={(e) => setsgst(e.target.value)}
+       />
+      
+      <h2>G. TOTAL</h2>
+       <input
+         placeholder="Total"
+         value={total}
+         onChange={(e) => settotal(e.target.value)}
+       />
+      
+      
+     
+      </div>
+     
+
+      <button onClick={generateDoc} className="add_btn" style={{margin:"1rem"}}>Download DOCX</button>
+    </>
   );
 }
 

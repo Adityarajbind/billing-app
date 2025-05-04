@@ -1,4 +1,74 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 body{
   background-color: rgb(28, 28, 28);
   color: white;
+  display: flex ;
+  justify-content: center;
+ 
+}
+.info{
+  width: 100%;
+  background-color: rgb(50, 50, 50);
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+}
+#root{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* gap:1rem; */
+  width:95%;
+}
+.heading{
+  text-align: center;
+  margin: 1rem 0;
+}
+h2{
+  align-self: start;
+}
+input,textarea{
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  font-size: 1.25rem;
+  align-self: start;
+  margin-bottom: 1rem;
+}
+.item{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 5px;
+  background-color: rgb(50, 50, 50);
+}
+.part1 , .part2{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  width: 100%;
+}
+.part1 > input , .part2 > input{
+  width: 97%;
+}
+
+.add_btn{
+  background-color: #913e98;
+  color: rgb(255, 255, 255);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+.add_btn:hover{
+  background-color:  #3e1b41
+
 }
